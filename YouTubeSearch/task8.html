@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript videos</title>
+    <style>
+
+#container {
+
+}
+
+.picture {
+
+}
+
+    </style>
+    <script>
+
+// url of mock YouTube "search"
+const searchAPIURL = "search.php";
+
+/**
+ * Is run when body is done loading.
+ */
+function onLoad() {
+
+    // fill container
+    fetchVideosAndFillContainer();
+}
+
+/**
+ * Fetch videos from "YouTube" by using mock php script and display it in html
+ */
+function fetchVideosAndFillContainer() {
+
+    // Fetch from search API, and fill page with results using promises
+    fetch(searchAPIURL)
+        .then(function(response) {
+
+            // return json
+            return response.json();
+        })
+        .then(function(myJson) {
+
+            // for each item returned by search, add it to the container if it 
+            // is a video (ignore playlists)
+            for (let item of myJson.items) {
+
+                // only add if is video
+                if (item.id.kind == "youtube#video") {
+
+                    let title = item.snippet.title;
+                    let thumbnailURL = item.snippet.thumbnails.default.url;
+                    let description = item.snippet.description;
+
+                    addVideo(title, thumbnailURL, description);
+                }
+            }
+        });
+}
+
+/**
+ * Add video to container
+ */
+function addVideo(title, thumbnailURL, description) {
+
+    // find container
+    let container = document.getElementById('container');
+
+    // add video with class picture
+    container.innerHTML += `
+        <div class="picture">
+            <h3>${ title }</h3>
+            <img src="${ thumbnailURL }"/>
+            <p>${ description }</p>
+        </div>
+    `;
+}
+
+    </script>
+</head>
+<body onload="onLoad()">
+    <div id="container">
+        <!-- filled in JavaScript -->
+    </div>
+</body>
+</html>
