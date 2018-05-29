@@ -74,7 +74,7 @@ if (    isset($_POST['id']) &&
             $crating >= 1   && $crating <= 200)) {
 
         // input is invalid. print message and exit
-        printMessage('Ugyldig input. Sikre at alt er innenfor de gitte intervallene');
+        printMessage('Data ble ikke lagret. Ugyldig input. Sikre at alt er innenfor de gitte intervallene');
         exit();
 
     }
@@ -94,7 +94,11 @@ if (    isset($_POST['id']) &&
     // if insertion failed, display DB error message to user
     if ($ret['status'] != 'ok') {
 
-        // show error message from DB
-        printMessage($ret['message']);
+        // show error message from DB and exit
+        printMessage('Data ble ikke lagret. Melding fra database: ' . $ret['message']);
+        exit();
     }
+
+    // if got this far -> inserted!
+    printMessage('Data ble lagret');
 }
