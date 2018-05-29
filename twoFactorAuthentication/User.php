@@ -152,7 +152,7 @@ class User {
      */
     function generateLoginForm() {
         return
-                '<form method="post" action="">
+                '<form method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
                     <label for="username">Username: </label><input name="username" type="text">
                     <label for="password">Password: </label><input name="password" type="password">
                     <input type="submit" value="Log in">
@@ -166,7 +166,7 @@ class User {
      */
     function generateVerificationForm() {
         return
-                '<form method="post" action="">
+                '<form method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
                     <label for="verification_code">Verification code: </label>
                     <input name="verification_code" type="number">
                     <input type="submit" value="Log in">
