@@ -11,16 +11,9 @@ $twigArguments['messages'] = array();
 $twigArguments['batterypackArray'] = array();
 $twigArguments['aircraftArray'] = array();
 
-
 // prepare DB
 $db = new DB();
 
-
-// TBA: handle form post
-
-
-
-// HANDLE FORM POST
 
 
 
@@ -96,11 +89,28 @@ if ($ret_getAircraft['status'] != 'ok') {
 
 
 
+// SETUP DATE ARGUMENT
+
+// initial date should be current date
+$date = date('Y-m-d');
+$twigArguments['date'] = $date;
 
 
 
 
-$twigArguments['date'] = "2018-05-29";
+
+
+
+
+
+
+
+
+
+
+
+// HANDLE FORM POST
+
 
 
 // render twig template with arguments
