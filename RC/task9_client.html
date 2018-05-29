@@ -6,7 +6,7 @@
     <style>
 
 /* Prettify form. Make align vertically using css grid */
-form {
+#form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 500px;
@@ -19,6 +19,8 @@ form {
 // URL's to API endpoints
 const allBatterypacksAPIURL = "task9_server_get_batteries.php";
 const allAircraftAPIURL = "task9_server_get_aircraft.php";
+const insertBatterystatusAPIURL = "task9_server_insert_batterystatus.php";
+
 
 // array of batterypacks gotten from server
 let batterypackArray = null;
@@ -151,7 +153,40 @@ function fillAircraftOptions() {
  */
 function addMessage(message) {
     document.getElementById('messages').innerHTML +=
-        `<i>${message}</i>`;
+        `<i>${message}</i></br>`;
+}
+
+/**
+ * Post formdata in "form" #form using fetc
+ * Inspired by: https://gist.github.com/seamusleahy/e63911a939f73ec8588bd472ed07980d
+ */
+function postForm() {
+
+    // prepare formdata
+    let formData = new FormData();
+    formData.append('craftid',              document.getElementById('aircraftdropdown').value);
+    formData.append('batteryid',            document.getElementById('batterypackdropdown').value);
+    formData.append('flighttime',           document.getElementById('flighttime').value);
+    formData.append('remainingcapacity',    document.getElementById('remainingcapacity').value);
+    formData.append('date',                 document.getElementById('date').value);
+
+
+    // fetch using formdata
+    fetch(insertBatterystatusAPIURL, { method: "POST", body: formData})
+        .then(function(response) {
+
+            // return json
+            return response.json();
+        })
+        .then(function(myJson) {
+
+            // show message indicating success/fail
+            if (myJson.status == 'ok') {
+                addMessage('Batteristatus ble lagret');
+            } else {
+                addMessage('Batteristatus ble ikke lagret. Melding fra database' + myJson.message);
+            }
+        })
 }
 
 /**
@@ -183,7 +218,7 @@ function buildCurrentDateString() {
     <h1>Registrer batteristatus</h1>
 
     <!-- form for adding vessel -->
-    <form method="post" action="">
+    <div id="form">
 
         <label for="cells">Celler: </label>
 
@@ -237,16 +272,16 @@ function buildCurrentDateString() {
 
 
         <label for="flighttime">Flytid (format: hh:mm:ss):</label>
-        <input name="flighttime" type="text" value="00:00:00">
+        <input id="flighttime" name="flighttime" type="text" value="00:00:00">
 
         <label for="remainingcapacity">Gjennværende kapasitet (i prosent):</label>
-        <input name="remainingcapacity" type="number" value="100" min="0" max="100">
+        <input id="remainingcapacity" name="remainingcapacity" type="number" value="100" min="0" max="100">
 
         <label for="date">Dato:</label>
         <input id="date" name="date" type="date">
 
-        <input type="submit" value="Lagre informasjon">
-    </form>
+        <input type="button" value="Lagre informasjon" onclick="postForm()">
+    </div>
 
     <div id="messages">
         <!-- added by JavaScript -->
