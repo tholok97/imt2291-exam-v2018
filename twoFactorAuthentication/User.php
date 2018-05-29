@@ -152,7 +152,7 @@ class User {
      */
     function generateLoginForm() {
         return
-                '<form method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
+                '<form id="loginForm"method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
                     <label for="username">Username: </label><input name="username" type="text">
                     <label for="password">Password: </label><input name="password" type="password">
                     <input type="submit" value="Log in">
@@ -166,13 +166,13 @@ class User {
      */
     function generateVerificationForm() {
         return
-                '<form method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
+                '<form id="verificationForm" method="post" action="" style="width:400px;display: grid; grid-template-columns: 1fr 1fr">
                     <label for="verification_code">Verification code: </label>
                     <input name="verification_code" type="number">
                     <input type="submit" value="Log in">
                 </form>
                 </br>
-                <i>Psst! The code is ' . $_SESSION['verification_code'] . '</i>';
+                <i>Psst! The code is <span id="verificationCode">' . $_SESSION['verification_code'] . '</span></i>';
     }
 
     /**
@@ -181,7 +181,7 @@ class User {
      * @return logout link as string
      */
     function generateLogoutLink() {
-        return '<a href="?logout">Log out</a>';
+        return '<a id="logoutLink" href="?logout">Log out</a>';
     }
 }
 

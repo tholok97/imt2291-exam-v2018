@@ -26,7 +26,7 @@ $user = new User();
     }
   </style>
 </head>
-<body>
+<body id="thisIdIsUsedForTesting">
   <?php
   echo $user->loginForm();
    ?>

@@ -1,5 +1,8 @@
 {
     "require-dev": {
         "phpunit/phpunit": "^6.5"
+    },
+    "require": {
+        "behat/mink-goutte-driver": "^1.2"
     }
 }
