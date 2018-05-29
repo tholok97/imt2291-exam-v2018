@@ -5,7 +5,7 @@
     <title>Registrer batteri</title>
     <style>
 
-/* Prettify form. Make align vertically using csss grid */
+/* Prettify form. Make align vertically using css grid */
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;
