@@ -5,6 +5,8 @@
  */
 class User {
 
+    private $loggedIn = false;
+
     /**
      * When constructed: handle forms submissions and prepare $_SESSION['state']
      */
@@ -16,6 +18,13 @@ class User {
         // if state isn't set, set it to loggedOff
         if (!isset($_SESSION['state'])) {
             $_SESSION['state'] = 'loggedOff';
+        }
+
+        // if state is logged in, set property loggedIn to true
+        // NOTE: Not really necessary with my solution, but had to add it for 
+        //  tests in task 6 to make sense
+        if ($_SESSION['state'] == 'loggedIn') {
+            $this->loggedIn = true;
         }
 
         // handle forms 
@@ -113,8 +122,11 @@ class User {
             // if code correct -> login
             // if not -> error
             if ($_POST['verification_code'] == $_SESSION['verification_code']) {
+
                 $_SESSION['state'] = 'loggedIn';
                 unset($_SESSION['verification_code']);
+                $this->loggedIn = true;
+
             } else {
                 // handle error
             }
@@ -128,5 +140,12 @@ class User {
             unset($_POST['logout']);
         }
 
+    }
+
+    /**
+     * Is the user logged in?
+     */
+    function isLoggedIn() {
+        return $this->loggedIn;
     }
 }
