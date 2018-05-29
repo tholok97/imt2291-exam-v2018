@@ -20,7 +20,37 @@ form {
 
     <!-- form for adding vessel -->
     <!-- TBA -->
-    koko
+    <form method="post" action="">
+
+        <label for="batterypack">Batteripakke:</label>
+
+        <!-- dropdown of possible batterypacks -->
+        <select name="batterypack">
+            {% for batterypack in batterypackArray %}
+            <option value="{{ batterypack.id }}">{{ batterypack.text }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- dropdown of possible aircrafts -->
+        <label for="aircraft">Fartøy:</label>
+        <select name="aircraft">
+            {% for aircraft in aircraftArray %}
+            <option value="{{ aircraft.id }}">{{ aircraft.text }}</option>
+            {% endfor %}
+        </select>
+
+
+        <label for="flyigtime">Flytid (format: hh:mm:ss):</label>
+        <input name="flyingtime" type="text" value="00:00:00">
+
+        <label for="remainingcapacity">Gjennværende kapasitet (i prosent):</label>
+        <input name="remainingcapacity" type="number" value="100" min="0" max="100">
+
+        <label for="date">Dato:</label>
+        <input name="date" type="date" value="{{ date }}">
+
+        <input type="submit" value="Lagre informasjon">
+    </form>
 
     <!-- show message if one was provided -->
     {% if message is defined %}
