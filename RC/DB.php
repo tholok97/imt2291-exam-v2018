@@ -46,7 +46,7 @@ class DB {
      * @param $crating
      * @param $purchasedate
      *
-     * @return assoc array with status and message
+     * @return assoc array with fields status and message
      */
     function insertBattery($id, $cells, $capacity, $cRating, $purchaseDate) {
 
@@ -61,8 +61,8 @@ class DB {
             // prepare insert statement
             $stmt = $this->dbh->prepare('
 INSERT INTO batteries (id, cells, capacity, maxDischarge, purchaseDate) 
-VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)'
-            );
+VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)
+            ');
 
             // bind with given paramters
             $stmt->bindParam(':id', $id);
@@ -78,7 +78,7 @@ VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)'
                 if ($stmt->rowCount() > 0) {
                     $ret['status'] = 'ok';
                 } else {
-                    $ret['message'] = "Statement executed right, but no rows were inserted: ";
+                    $ret['message'] = "Statement executed right, but no rows were inserted... Internal error";
                 }
 
             } else {
@@ -91,5 +91,57 @@ VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)'
         }
 
         return $ret;
+    }
+
+    /**
+     * Insert new vessel into database
+     *
+     * @param $name
+     * @param $fpv
+     * @param $camera
+     *
+     * @return assoc array with fields status and message
+     */
+    function insertVessel($name, $fpv, $camera) {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['message'] = null;
+
+        // try and insert into db
+        try {
+
+            // prepare insert statement
+            $stmt = $this->dbh->prepare('
+INSERT INTO aircrafts (name, fpv, camera)
+VALUES (:name, :fpv, :camera)
+            ');
+
+            // bind with given paramters
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':fpv', $fpv);
+            $stmt->bindParam(':camera', $camera);
+
+            // try and execute statement and react to success/fail
+            if ($stmt->execute()) {
+
+                // statement executed, but was something actually inserted?
+                if ($stmt->rowCount() > 0) {
+                    $ret['status'] = 'ok';
+                } else {
+                    $ret['message'] = "Statement executed right, but no rows were inserted... Internal error";
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't execute right : " . $stmt->errorInfo()[2];
+            }
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+        }
+
+        return $ret;
+
     }
 }

@@ -56,15 +56,17 @@ if (    isset($_POST['id']) &&
     $id = $_POST['id'];
     $cells = $_POST['cells'];
     $capacity = $_POST['capacity'];
-    $crating = $_POST['crating'];
+    $cRating = $_POST['crating'];
     $purchaseDate = $_POST['purchasedate'];
 
 
     // assert that parameters are within bounds 
+    // NOTE: I think this also protects from non-entered values. If I have 
+    //  time I will test
     if (  !($id >= 1        && $id <= 1000 &&
             $cells >= 1     && $cells <= 24 &&
             $capacity >= 50 && $capacity <= 20000 &&
-            $crating >= 1   && $crating <= 200)) {
+            $cRating >= 1   && $cRating <= 200)) {
 
         // input is invalid. print message and exit
         printMessage('Data ble ikke lagret. Ugyldig input. Sikre at alt er innenfor de gitte intervallene');
@@ -75,13 +77,13 @@ if (    isset($_POST['id']) &&
     // prepare db object
     $db = new DB();
 
-    // insert into db (db will handle incorrect formatting)
+    // insert into db
     $ret = $db->insertBattery(
-        $_POST['id'],
-        $_POST['cells'],
-        $_POST['capacity'],
-        $_POST['crating'],
-        $_POST['purchasedate']
+        $id,
+        $cells,
+        $capacity,
+        $cRating,
+        $purchaseDate
     );
 
     // if insertion failed, display DB error message to user
