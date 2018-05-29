@@ -1,22 +1,60 @@
 <!DOCTYPE html>
+
+<!--
+Heavily inspired by my own solution to lab0116: https://github.com/tholok97/imt2291-web-technology/blob/master/lab0116/templates/pictureDisplay.twig
+-->
+
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>JavaScript videos</title>
-    <style>
-
-#container {
-
-}
+    <head>
+        <meta charset="UTF-8">
+        <title>JavaScript videos</title>
+        <style>
 
 .picture {
 
+    /* 
+        WARNING: Don't  think this is widely supported. I'm using chrome 
+        Used to avoid picture divs flowing into next column.
+     */
+    break-inside: avoid-column;  
 }
 
-    </style>
-    <script>
+.picture>img {
+    width:300px;
+}
 
-// url of mock YouTube "search"
+/* Mobile (default. mobile first)*/
+#container {
+    column-count: 1;
+}
+
+/* Small sized screen */
+@media (min-width: 600px) and (max-width: 899px) {
+    #container {
+        column-count: 2;
+    }
+}
+
+/* Medium sized screen */
+@media (min-width: 900px) and (max-width: 1199px) {
+    #container {
+        column-count: 3;
+    }
+}
+
+/* Very large  sized screen */
+@media (min-width: 1200px) {
+    #container {
+        column-count: 4;
+    }
+}
+
+
+
+        </style>
+        <script>
+
+            // url of mock YouTube "search"
 const searchAPIURL = "search.php";
 
 /**
@@ -77,11 +115,11 @@ function addVideo(title, thumbnailURL, description) {
     `;
 }
 
-    </script>
-</head>
-<body onload="onLoad()">
-    <div id="container">
-        <!-- filled in JavaScript -->
-    </div>
-</body>
+        </script>
+    </head>
+    <body onload="onLoad()">
+        <div id="container">
+            <!-- filled in JavaScript -->
+        </div>
+    </body>
 </html>
