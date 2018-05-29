@@ -144,6 +144,27 @@ class FunctionalTests extends TestCase {
      */
     function testLogout() {
 
+        // visit the page
+        $this->session->visit($this->baseUrl);
+        $this->page = $this->session->getPage();
+
+        // login and verify using helper functions. Previous test asserts that 
+        // these work, so no need to test
+        $this->loginToSite();
+        $this->verify();
+
+        // press logout link
+        $this->page->find('css', '#logoutLink')->click();
+
+        // refresh page
+        $this->page = $this->session->getPage();
+
+        // assert that login form is back (logged out)
+        $this->assertInstanceOf(
+            NodeElement::Class,
+            $this->page->find('css', '#loginForm'),
+            'Have logged out. Login form should be present'
+        );
         
     }
 }
