@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Registrer fartøy</title>
     <style>
 
 /* Prettify form. Make align vertically using css grid */
@@ -18,14 +18,15 @@ form {
 <body>
     <h1>Registrer nytt fartøy</h1>
 
-    <!-- form for adding battery -->
+    <!-- form for adding vessel -->
     <form method="post" action="">
-        <label for="name">Navn:</label>                        <input name="name" type="text">
-        <label for="fpv">FPV:</label>                   <input name="fpv" type="checkbox">
-        <label for="camera">Kamera:</label>    <input name="camera" type="checkbox">
+        <label for="name">Navn:</label>                     <input name="name" type="text">
+        <label for="fpv">FPV:</label>                       <input name="fpv" type="checkbox">
+        <label for="camera">Kamera:</label>                 <input name="camera" type="checkbox">
         <input type="submit" value="Lagre informasjon">
     </form>
 
+    <!-- show message if one was provided -->
     {% if message is defined %}
     <i>{{ message }}</i>
     {% endif %}
