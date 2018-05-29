@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrer batteristatus</title>
+    <style>
+
+/* Prettify form. Make align vertically using css grid */
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 500px;
+    margin-bottom: 50px;
+}
+
+    </style>
+    <script>
+
+/**
+ * Run when body has loaded
+ */
+function onLoad() {
+
+    // set initial date to current date
+    document.getElementById('date').value = buildCurrentDateString();
+
+}
+
+/**
+ * Fill batterypack dropdown with options.
+ * Options are filtered by choice in cells dropdown
+ */
+function fillBatterypackOptions() {
+    // TBA
+}
+
+/**
+ * Fill aircraft dropdown with options
+ */
+function fillAircraftOptions() {
+    // TBA
+}
+
+/**
+ * Returns string of current date in format html input element expects.
+ * Taken from: https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
+   (Slightly altered for readability, and to conform to yyy-MM-dd)
+ */
+function buildCurrentDateString() {
+
+    let today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth()+1;    // January is 0!
+    let yyyy = today.getFullYear();
+
+    if (dd<10) {
+        dd = '0'+dd
+    } 
+
+    if (mm<10) {
+        mm = '0'+mm
+    } 
+
+    return yyyy + '-' + mm + '-' + dd
+}
+    
+    </script>
+</head>
+<body onload="onLoad()">
+    <h1>Registrer batteristatus</h1>
+
+    <!-- form for adding vessel -->
+    <form method="post" action="">
+
+        <label for="cells">Celler: </label>
+
+        <!-- dropdown of possible cells -->
+        <select name="cells">
+            <option value="3">3 cells</option>
+            <!-- filled by JavaScript -->
+        </select>
+
+
+        <label for="batteryid">Batteripakke:</label>
+
+        <!-- dropdown of possible batterypacks -->
+        <select name="batteryid">
+            <!-- filled by JavaScript -->
+        </select>
+
+        <!-- dropdown of possible aircrafts -->
+        <label for="craftid">Fartøy:</label>
+        <select name="craftid">
+            <!-- filled by JavaScript -->
+        </select>
+
+
+        <label for="flighttime">Flytid (format: hh:mm:ss):</label>
+        <input name="flighttime" type="text" value="00:00:00">
+
+        <label for="remainingcapacity">Gjennværende kapasitet (i prosent):</label>
+        <input name="remainingcapacity" type="number" value="100" min="0" max="100">
+
+        <label for="date">Dato:</label>
+        <input id="date" name="date" type="date">
+
+        <input type="submit" value="Lagre informasjon">
+    </form>
+
+</body>
+</html>
