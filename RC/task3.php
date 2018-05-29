@@ -118,6 +118,9 @@ if (isset($_POST['batteryid']) &&
         isset($_POST['remainingcapacity']) &&
         isset($_POST['date'])) {
 
+    // SHOULD ASSERT THAT $_POST['flighttime'] is properly formatted here, but 
+    // leaving out for now to save time
+
 
     // insert into db
     $ret_insertBatteryStatus = $db->insertBatterystatus(
