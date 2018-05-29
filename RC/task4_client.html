@@ -81,10 +81,11 @@ function updateImagelist() {
 
         if (this.readyState == 4 && this.status == 200) {
 
-            // for each image in response, add an image tag
+            // for each image in response, add an image tag with link around it. 
+            // the link downloads the actual image, with original filename
             for (let image of xhttp.response.images) {
                 imageList.innerHTML += 
-                    `<img src="./task4_server_get_thumbnail.php?craftid=${image.id}">`
+                    `<a href="./images/${image.id}" download="${image.filename}"><img src="./task4_server_get_thumbnail.php?craftid=${image.id}"></a>`
             }
         }
     };
