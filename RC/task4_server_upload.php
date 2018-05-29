@@ -56,14 +56,33 @@ $fileContent = file_get_contents($_FILES['imageFile']['tmp_name']);
 $thumbnail = scale(imagecreatefromstring($fileContent), THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 unset($fileContent);    // free up space
 
+// prepare database
+$db = new DB();
 
-// TBA
-$id = 923;
+// build date 
+$date = date('Y-m-d');
 
+// insert into database
+$ret = $db->insertAircraftImage(
+    $thumbnail,
+    $fileType,
+    $fileName,
+    $_POST['craftid'],
+    $date
+);
+
+// if something went wrong during insertion, exit with error
+if ($ret['status'] != 'ok') {
+    echo json_encode(array(
+        'status' => 'fail',
+        'message' => $ret['message']
+    ));
+    exit();
+}
 
 
 // save image to disk
-move_uploaded_file($_FILES['imageFile']['tmp_name'], 'images/' . $id);
+move_uploaded_file($_FILES['imageFile']['tmp_name'], 'images/' . $ret['id']);
 
 echo json_encode(array(
     "status" => "ok",

@@ -287,5 +287,63 @@ VALUES (:craftId, :batteryId, :flightTime, :capacityRemaining, :flightDate)
         return $ret;
     }
 
+    /**
+     * Insert aircraft image
+     *
+     * @param $media
+     * @param $mimeType
+     * @param $filename
+     * @param $craftId
+     * @param $dateAdded
+     *
+     * @return assoc array with fields status, id, message
+     */
+    function insertAircraftImage($media, $mimeType, $filename, $craftId, $dateAdded) {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['id'] = null;
+        $ret['message'] = null;
+
+
+        // try and insert into db
+        try {
+
+            // prepare insert statement
+            $stmt = $this->dbh->prepare('
+INSERT INTO aircraftImages (media, mimeType, filename, craftId, dateAdded) 
+VALUES (:media, :mimeType, :filename, :craftId, :dateAdded)
+            ');
+
+            // bind with given paramters
+            $stmt->bindParam(':media', $media);
+            $stmt->bindParam(':mimeType', $mimeType);
+            $stmt->bindParam(':filename', $filename);
+            $stmt->bindParam(':craftId', $craftId);
+            $stmt->bindParam(':dateAdded', $dateAdded);
+
+            // try and execute statement and react to success/fail
+            if ($stmt->execute()) {
+
+                // statement executed, but was something actually inserted?
+                if ($stmt->rowCount() > 0) {
+                    $ret['status'] = 'ok';
+                    $ret['id'] = $this->dbh->lastInsertId();
+                } else {
+                    $ret['message'] = "Statement executed right, but no rows were inserted... Internal error";
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't execute right : " . $stmt->errorInfo()[2];
+            }
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
 
 }
