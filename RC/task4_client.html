@@ -65,7 +65,34 @@ function updateDropdown() {
  * Fetch images from serverside API and fill imagelist
  */
 function updateImagelist() {
-    // TBA
+
+    // find imageList
+    let imageList = document.querySelector('#imageList');
+
+    // reset imagelist
+    imageList.innerHTML = "";
+
+    var xhttp = new XMLHttpRequest();
+
+    // want response to be interpreted as json
+    xhttp.responseType = 'json';
+
+    xhttp.onreadystatechange = function() {
+
+        if (this.readyState == 4 && this.status == 200) {
+
+            // for each image in response, add an image tag
+            for (let image of xhttp.response.images) {
+                imageList.innerHTML += 
+                    `<img src="./task4_server_get_thumbnail.php?craftid=${image.id}">`
+            }
+        }
+    };
+
+    // do request
+    xhttp.open("GET", "./task4_server_get_images.php", true);
+    xhttp.send();
+
 }
 
 
@@ -111,7 +138,8 @@ function uploadImage() {
         if (this.status == 200) {
             var resp = JSON.parse(this.response);
             console.log('Server got:', resp);
-        };
+            updateImagelist();
+        }
     };
     xhttp.send(formData);
 
@@ -137,6 +165,8 @@ function uploadImage() {
 
         <input type="button" value="Lagre informasjon" onclick="onClick()">
     </div>
+
+    <div id="imageList"></div>
 
 </form>
 </body>
