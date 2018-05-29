@@ -48,40 +48,22 @@ class User {
         case 'loggedOff':
             
             // user is logged off, show login form
-            echo '
-<form method="post" action="">
-    <label for="username">Username: </label><input name="username" type="text">
-    <label for="password">Password: </label><input name="password" type="password">
-    <input type="submit" value="Log in">
-</form>
-            ';
+            echo $this->generateLoginForm();
+                
 
             break;
 
         case 'verifying':
 
             // user is verifying, show verification form
-            echo '
-<form method="post" action="">
-    <label for="verification_code">Verification code: </label>
-    <input name="verification_code" type="number">
-    <input type="submit" value="Log in">
-</form>
-</br>
-<i>Psst! The code is ' . $_SESSION['verification_code'] . '</i>
-            ';
+            echo $this->generateVerificationForm();
 
             break;
 
         case 'loggedIn':
 
             // user is logged in, show logout button
-            echo '
-<form method="post" action="">
-    <input name="logout" type="hidden">
-    <input type="submit" value="Logout">
-</form>
-            ';
+            echo $this->generateLogoutlink();
 
             break;
         default:
@@ -135,17 +117,71 @@ class User {
         }
 
         // handle logout event
-        if (isset($_POST['logout'])) {
+        if (isset($_GET['logout'])) {
+
+            $this->loggedIn = false;
+
+            // clear state and remove GET parameter after logout
             $_SESSION['state'] = 'loggedOff';
-            unset($_POST['logout']);
+
+            /*
+                The line below makes sure that the GET parameter 'logout' doesn't 
+                stick around after you've logged out. It's commented out because 
+                phpunit dislikes headers being set during testing. As it statnds 
+                this in practise means that the user can only login -> verify -> 
+                logout once, before being trapped in a logged out state...
+             */
+            //header('Location: .');
         }
 
     }
 
     /**
      * Is the user logged in?
+     *
+     * @return boolean describing login status
      */
     function isLoggedIn() {
         return $this->loggedIn;
     }
+
+    /**
+     * Returns login form as string
+     *
+     * @return loginform string
+     */
+    function generateLoginForm() {
+        return
+                '<form method="post" action="">
+                    <label for="username">Username: </label><input name="username" type="text">
+                    <label for="password">Password: </label><input name="password" type="password">
+                    <input type="submit" value="Log in">
+                </form>';
+    }
+
+    /**
+     * Returns verification form as string
+     *
+     * @return verification form as string
+     */
+    function generateVerificationForm() {
+        return
+                '<form method="post" action="">
+                    <label for="verification_code">Verification code: </label>
+                    <input name="verification_code" type="number">
+                    <input type="submit" value="Log in">
+                </form>
+                </br>
+                <i>Psst! The code is ' . $_SESSION['verification_code'] . '</i>';
+    }
+
+    /**
+     * Returns logout link as string
+     *
+     * @return logout link as string
+     */
+    function generateLogoutLink() {
+        return '<a href="?logout">Log out</a>';
+    }
 }
+

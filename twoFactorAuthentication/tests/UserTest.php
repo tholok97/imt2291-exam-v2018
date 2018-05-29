@@ -115,8 +115,47 @@ class UserManagerTest extends TestCase {
     /**
      * Assert that when logout GET parameter is set, the user is logged out, 
      * and SESSION variable indicating logged in is cleared
+     *
+     * NOTE about my solution: I use a session variable 'state' to control where 
+     *  in the "lifecycle" of loggedOff, verifying and loggedIn the user 
+     *  currently is. As such, when the user is logged off state is set to 
+     *  'loggedOff', so I interpreted the wording in the task description such 
+     *  that 'loggedOff' counts as the varible being cleared
+     *
+     * @depends testAutomaticLogin
      */
     function testLogout() {
+
+        // FIRST LOG US IN
+
+        // set state session variable to logged in
+        $_SESSION['state'] = 'loggedIn';
+
+        // create user object
+        $user = new User();
+
+        // NOW TRY AND LOGOUT
+
+
+        // set logout GET parameter
+        $_GET['logout'] = '';      // value isn't used, so setting to ''
+
+        // simulate refresh by creating new User object
+        $user = new User();
+
+        // assert that user is logged out
+        $this->assertFalse(
+            $user->isLoggedIn(),
+            'User should be logged out after logout is passed as GET parameter'
+        );
+
+        // assert that session variable is reset to loggedOff
+        $this->assertEquals(
+            'loggedOff',
+            $_SESSION['state'],
+            'session variable \'state\' should be loggedoff ' .
+                    'after passed logout as GET parameter'
+        );
 
     }
 }
