@@ -10,6 +10,17 @@ Heavily inspired by my own solution to lab0116: https://github.com/tholok97/imt2
         <title>JavaScript videos</title>
         <style>
 
+#videoplayer {
+    z-index:2;
+    position: fixed;
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    right: 5%;
+    display: none;
+}
+
+
 .picture {
 
     /* 
@@ -54,8 +65,11 @@ Heavily inspired by my own solution to lab0116: https://github.com/tholok97/imt2
         </style>
         <script>
 
-            // url of mock YouTube "search"
+// url of mock YouTube "search"
 const searchAPIURL = "search.php";
+
+// should the next click hide the player? toggles back and fourth
+let shouldHideOnClick = false;
 
 /**
  * Is run when body is done loading.
@@ -64,6 +78,26 @@ function onLoad() {
 
     // fill container
     fetchVideosAndFillContainer();
+
+    // register handler for clicking on body. Clicks on body that are not on 
+    // the videoplayer should hide the player when it's showing. Uses 
+    // shouldHideOnClick toggle to know when to hide
+
+    document.addEventListener("click", function(e) {
+
+        // only hide if should. Toggle shouldHideOnClick
+        if (shouldHideOnClick) {
+            shouldHideOnClick = false;
+
+            // find videplayer
+            let videoplayer = document.getElementById('videoplayer');
+
+            // hide
+            videoplayer.style.display = 'none';
+        } else {
+            shouldHideOnClick = true;
+        }
+    });
 }
 
 /**
@@ -84,14 +118,17 @@ function fetchVideosAndFillContainer() {
             // is a video (ignore playlists)
             for (let item of myJson.items) {
 
+                console.log(item);
+
                 // only add if is video
                 if (item.id.kind == "youtube#video") {
 
                     let title = item.snippet.title;
                     let thumbnailURL = item.snippet.thumbnails.default.url;
                     let description = item.snippet.description;
+                    let videoId = item.id.videoId;
 
-                    addVideo(title, thumbnailURL, description);
+                    addVideo(title, thumbnailURL, description, videoId);
                 }
             }
         });
@@ -100,14 +137,14 @@ function fetchVideosAndFillContainer() {
 /**
  * Add video to container
  */
-function addVideo(title, thumbnailURL, description) {
+function addVideo(title, thumbnailURL, description, videoId) {
 
     // find container
     let container = document.getElementById('container');
 
     // add video with class picture
     container.innerHTML += `
-        <div class="picture">
+        <div class="picture" onclick="showVideo('${ videoId }')">
             <h3>${ title }</h3>
             <img src="${ thumbnailURL }"/>
             <p>${ description }</p>
@@ -115,11 +152,37 @@ function addVideo(title, thumbnailURL, description) {
     `;
 }
 
+/**
+ * Show video with given ID on top of video list
+ */
+function showVideo(videoId) {
+
+    // prepare embed link based on videoId
+    let embedLink = 'https://www.youtube.com/embed/' + videoId;
+
+    // find videplayer
+    let videoplayer = document.getElementById('videoplayer');
+
+    // show videoplayer, and make use link we just determined
+    videoplayer.src = embedLink;
+    videoplayer.style.display = 'block';
+
+}
+
         </script>
     </head>
     <body onload="onLoad()">
+
+        <!-- contains embedded YouTube player -->
+        <iframe 
+            id="videoplayer"
+            src="https://www.youtube.com/embed/tgbNymZ7vqY">
+        </iframe>
+
+        <!-- contains all videos returned from search API -->
         <div id="container">
             <!-- filled in JavaScript -->
         </div>
+
     </body>
 </html>
