@@ -80,7 +80,7 @@ function fillBatterypackOptions() {
                     }
                 }
             } else {
-                // TBA
+                addMessage("Feil ved henting av batterypacks. Melding fra database: " + myJson.message);
             }
         });
 }
@@ -90,6 +90,10 @@ function fillBatterypackOptions() {
  */
 function fillAircraftOptions() {
 
+    // find aircraft dropdown
+    let aircraftDropDown = document.getElementById('aircraftdropdown');
+
+
     // Fetch from RC API
     fetch(allAircraftAPIURL)
         .then(function(response) {
@@ -98,8 +102,34 @@ function fillAircraftOptions() {
             return response.json();
         })
         .then(function(myJson) {
-            console.log(myJson);
+
+            // if okay -> fill dropdown
+            // if not -> show error message
+            if (myJson.status == 'ok') {
+
+                // clear options in batterypack dropdown
+                aircraftDropDown.innerHTML = "";
+
+                // add each batterypack that has required amount of cells as option
+                for (let aircraft of myJson.aircraft) {
+
+                    // add option
+                    aircraftDropDown.innerHTML += `
+                        <option value="${ aircraft.id }">${ aircraft.name }</option>
+                    `;
+                }
+            } else {
+                addMessage("Feil ved henting av fartøy. Melding fra database: " + myJson.message);
+            }
         });
+}
+
+/**
+ * Adds message to UI
+ */
+function addMessage(message) {
+    document.getElementById('messages').innerHTML +=
+        `<i>${message}</i>`;
 }
 
 /**
@@ -150,8 +180,8 @@ function buildCurrentDateString() {
         </select>
 
         <!-- dropdown of possible aircrafts -->
-        <label id="aircraftdropdown" for="craftid">Fartøy:</label>
-        <select name="craftid">
+        <label for="craftid">Fartøy:</label>
+        <select id="aircraftdropdown" id="" name="craftid">
             <!-- filled by JavaScript -->
         </select>
 
@@ -167,6 +197,10 @@ function buildCurrentDateString() {
 
         <input type="submit" value="Lagre informasjon">
     </form>
+
+    <div id="messages">
+        <!-- added by JavaScript -->
+    </div>
 
 </body>
 </html>
