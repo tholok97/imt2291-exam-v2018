@@ -10,6 +10,7 @@ form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 500px;
+    margin-bottom: 50px;
 }
 
     </style>
@@ -17,14 +18,6 @@ form {
 <body>
     
     <h1>Registrer nytt batteri</h1>
-
-<!--
-ID (et tall som fungerer som unik identifikator, men som ikke er en autoinkrement verdi) (verdier i området 1-1000)
-antall celler i batteriet (sier noe om spenningen fra batteriet) (verdier i området 1-24)
-kapasiteten til batteriet (målt i mAh (milliAmperTimer)) (verdier i området 50-20000)
-C-ratingen til batteriet (sier noe om hvor mye strøm batteriet kan levere, maksimal discharge rate) (verdier i området 1-200)
-når batteriet er kjøpt (dato)
--->
 
     <!-- form for adding battery -->
     <form method="post" action="">
