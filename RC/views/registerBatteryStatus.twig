@@ -52,10 +52,10 @@ form {
         <input type="submit" value="Lagre informasjon">
     </form>
 
-    <!-- show message if one was provided -->
-    {% if message is defined %}
+    <!-- show messageS -->
+    {% for message in messages %}
     <i>{{ message }}</i>
-    {% endif %}
+    {% endfor %}
 
 </body>
 </html>

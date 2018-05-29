@@ -144,4 +144,91 @@ VALUES (:name, :fpv, :camera)
         return $ret;
 
     }
+
+    /**
+     * Returns array of battery packs
+     *
+     * @return assoc array with fields status, batterypacks and message
+     */
+    function getBatteries() {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['batteries'] = array();
+        $ret['message'] = null;
+
+        // try and get batterypacks
+        try {
+
+            // prepare statement to get all batteries
+            $stmt = $this->dbh->prepare('
+SELECT *
+FROM batteries
+            ');
+
+            // execute the statement and handle errors
+            if ($stmt->execute()) {
+                $ret['status'] = 'ok';
+
+                // add all rows to ret
+                foreach ($stmt->fetchAll() as $row) {
+                    array_push($ret['batteries'], $row);
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't exeute right : " . $stmt->errorInfo()[2];
+            }
+
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Returns array of aircraft
+     *
+     * @return assoc array with fields status, aircraft and message
+     */
+    function getAircraft() {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['aircraft'] = array();
+        $ret['message'] = null;
+
+        // try and get aircraft
+        try {
+
+            // prepare statement to get all aircraft
+            $stmt = $this->dbh->prepare('
+SELECT *
+FROM aircrafts
+            ');
+
+            // execute the statement and handle errors
+            if ($stmt->execute()) {
+                $ret['status'] = 'ok';
+
+                // add all rows to ret
+                foreach ($stmt->fetchAll() as $row) {
+                    array_push($ret['aircraft'], $row);
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't execute right : " . $stmt->errorInfo()[2];
+            }
+
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
 }
