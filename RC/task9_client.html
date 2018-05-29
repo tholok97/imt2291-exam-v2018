@@ -20,6 +20,9 @@ form {
 const allBatterypacksAPIURL = "task9_server_get_batteries.php";
 const allAircraftAPIURL = "task9_server_get_aircraft.php";
 
+// array of batterypacks gotten from server
+let batterypackArray = null;
+
 /**
  * Run when body has loaded
  */
@@ -35,16 +38,10 @@ function onLoad() {
 }
 
 /**
- * Fill batterypack dropdown with options.
- * Options are filtered by choice in cells dropdown
+ * Fetch all battery packs from server and store them in global variable 'batterypackArray'
+ * Fill dropdown after. Simpler to initiate this from here because of async nature
  */
-function fillBatterypackOptions() {
-
-    // find batterypack dropdown
-    let batterypackDropDown = document.getElementById('batterypackdropdown');
-
-    // amount of cells to filter on
-    let requiredCells = document.getElementById('cellsFilter').value;
+function fetchBatterypacksAndFill() {
 
     // Fetch from RC API
     fetch(allBatterypacksAPIURL)
@@ -55,35 +52,59 @@ function fillBatterypackOptions() {
         })
         .then(function(myJson) {
 
-            // if okay -> fill dropdown
+            // if okay -> fill array
             // if not -> show error message
             if (myJson.status == 'ok') {
-
-                // clear options in batterypack dropdown
-                batterypackDropDown.innerHTML = "";
-
-                // add each batterypack that has required amount of cells as option
-                for (let batterypack of myJson.batteries) {
-
-                    // only add if has required number of cells
-                    if (batterypack.cells == requiredCells) {
-
-                        // build battery pack name
-                        // Format taken from task description:
-                        //  "#<id> - <cells>cell/<capacity> mAh"
-                        let batterypackName = 
-                            `#${batterypack.id} - ${batterypack.cells}cell/${batterypack.capacity} mAh`;
-
-                        // add option
-                        batterypackDropDown.innerHTML += `
-                            <option value="${ batterypack.id }">${ batterypackName }</option>
-                        `;
-                    }
-                }
+                batterypackArray = myJson.batteries;
             } else {
                 addMessage("Feil ved henting av batterypacks. Melding fra database: " + myJson.message);
             }
+        })
+        .then(function() {
+            fillBatterypackOptions();
         });
+}
+
+/**
+ * Fill batterypack dropdown with options.
+ * Options are filtered by choice in cells dropdown
+ */
+function fillBatterypackOptions() {
+
+    // first check if batterypacksArray is null, if it is -> fetch from server
+    if (batterypackArray == null) {
+        fetchBatterypacksAndFill();
+    } else {
+
+        // find batterypack dropdown
+        let batterypackDropDown = document.getElementById('batterypackdropdown');
+
+        // amount of cells to filter on
+        let requiredCells = document.getElementById('cellsFilter').value;
+
+
+        // clear options in batterypack dropdown
+        batterypackDropDown.innerHTML = "";
+
+        // add each batterypack that has required amount of cells as option
+        for (let batterypack of batterypackArray) {
+
+            // only add if has required number of cells
+            if (batterypack.cells == requiredCells) {
+
+                // build battery pack name
+                // Format taken from task description:
+                //  "#<id> - <cells>cell/<capacity> mAh"
+                let batterypackName = 
+                    `#${batterypack.id} - ${batterypack.cells}cell/${batterypack.capacity} mAh`;
+
+                // add option
+                batterypackDropDown.innerHTML += `
+                    <option value="${ batterypack.id }">${ batterypackName }</option>
+                `;
+            }
+        }
+    }
 }
 
 /**
