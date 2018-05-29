@@ -231,4 +231,61 @@ FROM aircrafts
         return $ret;
     }
 
+    /**
+     * Insert batterystatus 
+     *
+     * @param $craftid
+     * @param $batteryid 
+     * @param $flightTime 
+     * @param $capacityRemaining
+     * @param $flightDate
+     *
+     * @return assoc array with fields status and message
+     */
+    function insertBatterystatus($craftID, $batteryID, $flightTime, $capacityRemaining, $flightDate) {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['message'] = null;
+
+
+        // try and insert into db
+        try {
+
+            // prepare insert statement
+            $stmt = $this->dbh->prepare('
+INSERT INTO batteryStatus (craftId, batteryId, flightTime, capacityRemaining, flightDate) 
+VALUES (:craftId, :batteryId, :flightTime, :capacityRemaining, :flightDate)
+            ');
+
+            // bind with given paramters
+            $stmt->bindParam(':craftId', $craftID);
+            $stmt->bindParam(':batteryId', $batteryID);
+            $stmt->bindParam(':flightTime', $flightTime);
+            $stmt->bindParam(':capacityRemaining', $capacityRemaining);
+            $stmt->bindParam(':flightDate', $flightDate);
+
+            // try and execute statement and react to success/fail
+            if ($stmt->execute()) {
+
+                // statement executed, but was something actually inserted?
+                if ($stmt->rowCount() > 0) {
+                    $ret['status'] = 'ok';
+                } else {
+                    $ret['message'] = "Statement executed right, but no rows were inserted... Internal error";
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't execute right : " . $stmt->errorInfo()[2];
+            }
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
+
 }

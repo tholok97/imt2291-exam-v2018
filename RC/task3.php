@@ -111,6 +111,39 @@ $twigArguments['date'] = $date;
 
 // HANDLE FORM POST
 
+// if post incomming, handle it
+if (isset($_POST['batteryid']) &&
+        isset($_POST['craftid']) &&
+        isset($_POST['flighttime']) &&
+        isset($_POST['remainingcapacity']) &&
+        isset($_POST['date'])) {
+
+
+    // insert into db
+    $ret_insertBatteryStatus = $db->insertBatterystatus(
+        $_POST['craftid'],
+        $_POST['batteryid'],
+        $_POST['flighttime'],
+        $_POST['remainingcapacity'],
+        $_POST['date']
+    );
+
+
+    // if not okay -> show message with info from db
+    // if okay -> show success message
+    if ($ret_insertBatteryStatus['status'] != 'ok') {
+        array_push(
+            $twigArguments['messages'],
+            'Ingen date lagret. Noe gikk galt under registrering. Melding fra database: ' . $ret_insertBatteryStatus['message']
+        );
+    } else {
+        array_push(
+            $twigArguments['messages'],
+            'Data ble satt inn'
+        );
+    }
+}
+
 
 
 // render twig template with arguments

@@ -22,26 +22,26 @@ form {
     <!-- TBA -->
     <form method="post" action="">
 
-        <label for="batterypack">Batteripakke:</label>
+        <label for="batteryid">Batteripakke:</label>
 
         <!-- dropdown of possible batterypacks -->
-        <select name="batterypack">
+        <select name="batteryid">
             {% for batterypack in batterypackArray %}
             <option value="{{ batterypack.id }}">{{ batterypack.text }}</option>
             {% endfor %}
         </select>
 
         <!-- dropdown of possible aircrafts -->
-        <label for="aircraft">Fartøy:</label>
-        <select name="aircraft">
+        <label for="craftid">Fartøy:</label>
+        <select name="craftid">
             {% for aircraft in aircraftArray %}
             <option value="{{ aircraft.id }}">{{ aircraft.text }}</option>
             {% endfor %}
         </select>
 
 
-        <label for="flyigtime">Flytid (format: hh:mm:ss):</label>
-        <input name="flyingtime" type="text" value="00:00:00">
+        <label for="flighttime">Flytid (format: hh:mm:ss):</label>
+        <input name="flighttime" type="text" value="00:00:00">
 
         <label for="remainingcapacity">Gjennværende kapasitet (i prosent):</label>
         <input name="remainingcapacity" type="number" value="100" min="0" max="100">
