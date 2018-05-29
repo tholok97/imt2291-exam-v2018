@@ -16,6 +16,10 @@ form {
     </style>
     <script>
 
+// URL's to API endpoints
+const allBatterypacksAPIURL = "task9_server_get_batteries.php";
+const allAircraftAPIURL = "task9_server_get_aircraft.php";
+
 /**
  * Run when body has loaded
  */
@@ -24,6 +28,9 @@ function onLoad() {
     // set initial date to current date
     document.getElementById('date').value = buildCurrentDateString();
 
+    fillBatterypackOptions();
+    fillAircraftOptions();
+
 }
 
 /**
@@ -31,14 +38,68 @@ function onLoad() {
  * Options are filtered by choice in cells dropdown
  */
 function fillBatterypackOptions() {
-    // TBA
+
+    // find batterypack dropdown
+    let batterypackDropDown = document.getElementById('batterypackdropdown');
+
+    // amount of cells to filter on
+    let requiredCells = 3;              // HARDCODED FOR NOW
+
+    // Fetch from RC API
+    fetch(allBatterypacksAPIURL)
+        .then(function(response) {
+
+            // return json
+            return response.json();
+        })
+        .then(function(myJson) {
+
+            // if okay -> fill dropdown
+            // if not -> show error message
+            if (myJson.status == 'ok') {
+
+                // clear options in batterypack dropdown
+                batterypackDropDown.innerHTML = "";
+
+                // add each batterypack that has required amount of cells as option
+                for (let batterypack of myJson.batteries) {
+
+                    // only add if has required number of cells
+                    if (batterypack.cells == requiredCells) {
+
+                        // build battery pack name
+                        // Format taken from task description:
+                        //  "#<id> - <cells>cell/<capacity> mAh"
+                        let batterypackName = 
+                            `#${batterypack.id} - ${batterypack.cells}cell/${batterypack.capacity} mAh`;
+
+                        // add option
+                        batterypackDropDown.innerHTML += `
+                            <option value="${ batterypack.id }">${ batterypackName }</option>
+                        `;
+                    }
+                }
+            } else {
+                // TBA
+            }
+        });
 }
 
 /**
  * Fill aircraft dropdown with options
  */
 function fillAircraftOptions() {
-    // TBA
+
+    // Fetch from RC API
+    fetch(allAircraftAPIURL)
+        .then(function(response) {
+
+            // return json
+            return response.json();
+        })
+        .then(function(myJson) {
+            console.log(myJson);
+        });
 }
 
 /**
@@ -84,12 +145,12 @@ function buildCurrentDateString() {
         <label for="batteryid">Batteripakke:</label>
 
         <!-- dropdown of possible batterypacks -->
-        <select name="batteryid">
+        <select id="batterypackdropdown" name="batteryid">
             <!-- filled by JavaScript -->
         </select>
 
         <!-- dropdown of possible aircrafts -->
-        <label for="craftid">Fartøy:</label>
+        <label id="aircraftdropdown" for="craftid">Fartøy:</label>
         <select name="craftid">
             <!-- filled by JavaScript -->
         </select>
