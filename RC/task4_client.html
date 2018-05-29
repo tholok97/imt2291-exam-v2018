@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Last opp bilde</title>
+    <style>
+
+/* Prettify form. Make align vertically using css grid */
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 500px;
+    margin-bottom: 50px;
+}
+
+    </style>
+    <script>
+
+/**
+ * Called when <body> is done loading.
+ */
+function onLoad() {
+
+    updateDropdown();
+    updateImagelist();
+}
+
+/**
+ * Fetch possible aircraft from serverside API and fill dropdown
+ */
+function updateDropdown() {
+
+    // find dropdown in document
+    let dropdown = document.querySelector('form>select');
+
+    // start query to find aircraft
+    // Heavily inspired by example at https://www.w3schools.com/xml/xml_http.asp
+    // Could have used the Fetch API, but opted for XMLHttpRequest because it is 
+    //  used later in the task
+
+    
+    var xhttp = new XMLHttpRequest();
+
+    // want response to be interpreted as json
+    xhttp.responseType = 'json';
+
+    xhttp.onreadystatechange = function() {
+
+        // When finished all aircraft should be added to dropdown
+        if (this.readyState == 4 && this.status == 200) {
+
+            // for each aircraft in response, add an option to dropdown
+            for (let aircraft of xhttp.response.aircraft) {
+                dropdown.innerHTML += `<option value="${aircraft.id}">${aircraft.name}</option>`
+            }
+        }
+    };
+
+    // do request
+    xhttp.open("GET", "./task4_server_get_aircraft.php", true);
+    xhttp.send();
+}
+
+/**
+ * Fetch images from serverside API and fill imagelist
+ */
+function updateImagelist() {
+    // TBA
+}
+
+
+/**
+ * React to user clicking button. Upload image
+ */
+function onClick() {
+    uploadImage();
+}
+
+/**
+ * Start upload of image
+ */
+function uploadImage() {
+    console.log("starting upload");
+}
+
+    </script>
+</head>
+<body onload="onLoad()">
+    <h1>Last opp bilde av fartøy</h1>
+
+    <!-- form for uploading image -->
+    <form>
+
+        <label for="craftid">Fartøy:</label>
+
+        <!-- dropdown of aircraft -->
+        <select name="craftid">
+            <!-- filled by JavaScript after site loaded -->
+        </select>
+
+
+        <label for="file">Fil:</label>
+        <input name="file" type="file">
+
+        <input type="button" value="Lagre informasjon" onclick="onClick()">
+
+    </form>
+</body>
+</html>
