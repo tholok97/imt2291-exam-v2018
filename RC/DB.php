@@ -94,7 +94,7 @@ VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)
     }
 
     /**
-     * Insert new vessel into database
+     * Insert new aircraft into database
      *
      * @param $name
      * @param $fpv
@@ -102,7 +102,7 @@ VALUES (:id, :cells, :capacity, :maxDischarge, :purchaseDate)
      *
      * @return assoc array with fields status and message
      */
-    function insertVessel($name, $fpv, $camera) {
+    function insertAircraft($name, $fpv, $camera) {
 
         // prepare ret
         $ret['status'] = 'fail';

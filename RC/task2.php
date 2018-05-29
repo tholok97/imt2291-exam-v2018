@@ -35,7 +35,7 @@ if (isset($_POST['name'])) {
         $db = new DB();
 
         // insert into db
-        $ret = $db->insertVessel(
+        $ret = $db->insertAircraft(
             $_POST['name'],
             $fpv,
             $camera
@@ -59,4 +59,4 @@ if (isset($_POST['name'])) {
 
 
 // render twig template with arguments
-echo $twig->render('registerVessel.twig', $twigArguments);
+echo $twig->render('registerAircraft.twig', $twigArguments);
