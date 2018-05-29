@@ -28,6 +28,7 @@ function onLoad() {
     // set initial date to current date
     document.getElementById('date').value = buildCurrentDateString();
 
+    // fill dropdowns
     fillBatterypackOptions();
     fillAircraftOptions();
 
@@ -43,7 +44,7 @@ function fillBatterypackOptions() {
     let batterypackDropDown = document.getElementById('batterypackdropdown');
 
     // amount of cells to filter on
-    let requiredCells = 3;              // HARDCODED FOR NOW
+    let requiredCells = document.getElementById('cellsFilter').value;
 
     // Fetch from RC API
     fetch(allBatterypacksAPIURL)
@@ -165,10 +166,38 @@ function buildCurrentDateString() {
 
         <label for="cells">Celler: </label>
 
-        <!-- dropdown of possible cells -->
-        <select name="cells">
-            <option value="3">3 cells</option>
-            <!-- filled by JavaScript -->
+        <!-- 
+        dropdown of possible cells. Refreshes batterypack dropdown upon change
+
+        NOTE: This could have been generated dynamicly based on available 
+        batterypacks, but I've hardcoded it for simplicity, and because it was 
+        not explicitly requested in the task description
+        -->
+        <select id="cellsFilter" name="cells" onchange="fillBatterypackOptions()">
+            <option value="1">1 cells</option>
+            <option value="2">2 cells</option>
+            <option value="3" selected="selected">3 cells</option>
+            <option value="4">4 cells</option>
+            <option value="5">5 cells</option>
+            <option value="6">6 cells</option>
+            <option value="7">7 cells</option>
+            <option value="8">8 cells</option>
+            <option value="9">9 cells</option>
+            <option value="10">10 cells</option>
+            <option value="11">11 cells</option>
+            <option value="12">12 cells</option>
+            <option value="13">13 cells</option>
+            <option value="14">14 cells</option>
+            <option value="15">15 cells</option>
+            <option value="16">16 cells</option>
+            <option value="17">17 cells</option>
+            <option value="18">18 cells</option>
+            <option value="19">19 cells</option>
+            <option value="20">20 cells</option>
+            <option value="21">21 cells</option>
+            <option value="22">22 cells</option>
+            <option value="23">23 cells</option>
+            <option value="24">24 cells</option>
         </select>
 
 
