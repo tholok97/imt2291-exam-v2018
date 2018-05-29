@@ -3,6 +3,9 @@ bin/*
 build/*
 vendor/
 
+# ignore images
+images/
+
 # Ignore any build-files still roaming around
 *.exe
 *.out
