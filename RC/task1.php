@@ -18,13 +18,21 @@ form {
     
     <h1>Registrer nytt batteri</h1>
 
+<!--
+ID (et tall som fungerer som unik identifikator, men som ikke er en autoinkrement verdi) (verdier i området 1-1000)
+antall celler i batteriet (sier noe om spenningen fra batteriet) (verdier i området 1-24)
+kapasiteten til batteriet (målt i mAh (milliAmperTimer)) (verdier i området 50-20000)
+C-ratingen til batteriet (sier noe om hvor mye strøm batteriet kan levere, maksimal discharge rate) (verdier i området 1-200)
+når batteriet er kjøpt (dato)
+-->
+
     <!-- form for adding battery -->
     <form method="post" action="">
-        <label for="id">Id:</label>                         <input name="id" type="number">
-        <label for="cells">Celler:</label>                  <input name="cells" type="number">
-        <label for="capacity">Kapasitet (mAh):</label>      <input name="capacity" type="number">
-        <label for="crating">C-rating:</label>              <input name="crating" type="number">
-        <label for="purchasedate">Purchase date:</label>    <input name="purchasedate" type="date">
+        <label for="id">Id (1-1000):</label>                        <input name="id" type="number">
+        <label for="cells">Celler (1-24):</label>                   <input name="cells" type="number">
+        <label for="capacity">Kapasitet (mAh, 50-20000):</label>    <input name="capacity" type="number">
+        <label for="crating">C-rating (1-200):</label>              <input name="crating" type="number">
+        <label for="purchasedate">Purchase date:</label>            <input name="purchasedate" type="date">
         <input type="submit" value="Lagre informasjon">
     </form>
 
@@ -37,8 +45,12 @@ form {
 
 require_once dirname(__FILE__) . '/DB.php';
 
-// DEBUG
-print_r($_POST);
+/**
+ * Prints given message with some formatting
+ */
+function printMessage($msg) {
+    echo '<i>' . $msg . '</i>';
+}
 
 // if received post request from form -> try and insert into db
 if (    isset($_POST['id']) &&
@@ -47,20 +59,42 @@ if (    isset($_POST['id']) &&
         isset($_POST['crating']) &&
         isset($_POST['purchasedate'])) {
 
-        // prepare db object
-        $db = new DB();
+    // store POST paramters as variables
+    $id = $_POST['id'];
+    $cells = $_POST['cells'];
+    $capacity = $_POST['capacity'];
+    $crating = $_POST['crating'];
+    $purchaseDate = $_POST['purchasedate'];
 
-        // insert into db (db will handle incorrect formatting)
-        $ret = $db->insertBattery(
-            $_POST['id'],
-            $_POST['cells'],
-            $_POST['capacity'],
-            $_POST['crating'],
-            $_POST['purchasedate']
-        );
 
-        // if insertion failed, display DB error message to user
-        if ($ret['status'] != 'ok') {
-            // TBA
-        }
+    // assert that parameters are within bounds 
+    if (  !($id >= 1        && $id <= 1000 &&
+            $cells >= 1     && $cells <= 24 &&
+            $capacity >= 50 && $capacity <= 20000 &&
+            $crating >= 1   && $crating <= 200)) {
+
+        // input is invalid. print message and exit
+        printMessage('Ugyldig input. Sikre at alt er innenfor de gitte intervallene');
+        exit();
+
+    }
+
+    // prepare db object
+    $db = new DB();
+
+    // insert into db (db will handle incorrect formatting)
+    $ret = $db->insertBattery(
+        $_POST['id'],
+        $_POST['cells'],
+        $_POST['capacity'],
+        $_POST['crating'],
+        $_POST['purchasedate']
+    );
+
+    // if insertion failed, display DB error message to user
+    if ($ret['status'] != 'ok') {
+
+        // show error message from DB
+        printMessage($ret['message']);
+    }
 }
