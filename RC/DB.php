@@ -182,7 +182,7 @@ FROM batteries
 
         } catch (PDOException $ex) {
             $ret['status'] = 'fail';
-            $ret['message'] = "Something went wrong when inserting: " . $ex->getMessage();
+            $ret['message'] = "Something went wrong when fetching: " . $ex->getMessage();
         }
 
         return $ret;
@@ -345,5 +345,102 @@ VALUES (:media, :mimeType, :filename, :craftId, :dateAdded)
         return $ret;
     }
 
+    /**
+     * Returns array of image ids and filenames. Rest of information can be fetched with these values
+     *
+     * @return assoc array with fields status, images and message
+     */
+    function getAircraftImageIdsAndFilenames() {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['images'] = array();
+        $ret['message'] = null;
+
+        // try and get images
+        try {
+
+            // prepare statement
+            $stmt = $this->dbh->prepare('
+SELECT *
+FROM aircraftImages
+            ');
+
+            // execute the statement and handle errors
+            if ($stmt->execute()) {
+                $ret['status'] = 'ok';
+
+                // add all rows to ret
+                foreach ($stmt->fetchAll() as $row) {
+                    array_push(
+                        $ret['images'], 
+                        [
+                            'id' => $row['id'],
+                            'filename' => $row['filename']
+                        ]
+                    );
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't exeute right : " . $stmt->errorInfo()[2];
+            }
+
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when fetching: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Get thumbnail of aircraft with given id
+     *
+     * @param $id
+     *
+     * @return assoc array with fields status, thumbnail, mimeType, message
+     */
+    function getAircraftThumbnail($craftID) {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['thumbnail'] = array();
+        $ret['message'] = null;
+
+        // try and get thumbnail
+        try {
+
+            // prepare statement
+            $stmt = $this->dbh->prepare('
+SELECT media, mimeType
+FROM aircraftImages
+WHERE id=:id
+            ');
+
+            // bind param
+            $stmt->bindParam(':id', $craftID);
+
+            // execute the statement and handle errors
+            if ($stmt->execute()) {
+
+                // success!
+                $ret['status'] = 'ok';
+                $row = $stmt->FetchAll()[0];
+                $ret['thumbnail'] = $row['media'];
+                $ret['mimeType'] = $row['mimeType'];
+
+            } else {
+                $ret['message'] = "Statement didn't exeute right : " . $stmt->errorInfo()[2];
+            }
+
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when fetching: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
 
 }
