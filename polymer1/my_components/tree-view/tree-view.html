@@ -1,5 +1,40 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
+<!--
+
+Did not have time to finish this task. I'd like to explain what I have done 
+and what is left:
+
+# What has been done
+
+* The component receives a json object and sets value and path aruments like specified
+* The component renders only the properties in given path (here pathArray)
+* The component recursively digs down into the object to do it's rendering
+* Path and value work correctly, although they are formatted somewhat strange
+
+# What is left to do
+
+* The component is currently non-interactive. The path is set at creation time 
+  (hardcoded to demonstrate it in action), and cannot be set by clicking on properties
+* The component does not show arrays and property values in the pretty fashion that the 
+  demo in the task description did. with my component you'll have to infer them from the value field
+* Component only works on properties, not arrays
+
+# How I would solve the remaining tasks:
+
+* I've started a recursive function that digs down into the object and displays 
+  appropriate properties. I would continue by making this function render arrays 
+  properly, and making the inserted properties clickable somehow (simple link? 
+  onclick attribute?). The properties would lauch another function that would set 
+  the this.pathArray
+* I've used this.pathArray to specify how far down into the object the user is. I would 
+  extend it by somehow allowing for digging into arrays (this is currently not possible)
+* I would fix the formatting of rendered object and path and value fields to match 
+that of the demo in the task description
+
+
+-->
+
 <dom-module id="tree-view">
     <template>
         <style>
