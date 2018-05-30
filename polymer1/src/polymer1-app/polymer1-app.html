@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../my_components/tree-view/tree-view.html">
+
+<dom-module id="polymer1-app">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <iron-ajax
+            auto
+            url="https://randomuser.me/api/?results=3"
+            handle-as="json"
+            last-response="{{response}}"></iron-ajax>
+
+        <!--
+        NOTE: changed selected-path/value to path/value, as I was having 
+        issues with it and don't have time to fix
+        -->
+        <tree-view 
+                path="{{path}}" 
+                value="{{value}}" 
+                data="{{response}}"></tree-view>
+
+        Path: [[path]]<br>
+        Value: [[value]]
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+class Polymer1App extends Polymer.Element {
+    static get is() { return 'polymer1-app'; }
+    static get properties() {
+        return {
+            path: {
+                type: String
+            },
+            value: {
+                type: String
+            },
+            response: {
+                type: Object
+            }
+        };
+    }
+}
+
+window.customElements.define(Polymer1App.is, Polymer1App);
+    </script>
+</dom-module>

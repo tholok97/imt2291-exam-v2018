@@ -1,0 +1,125 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="tree-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            #renderWindow {
+                border: 1px solid black;
+                width: 500px;
+                height: 500px;
+            }
+        </style>
+
+        <div id="renderWindow">
+            <!-- filled by JavaScript -->
+        </div>
+
+
+    </template>
+
+    <script>
+        /**
+         * `tree-view`
+         * 
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+class TreeView extends Polymer.Element {
+    static get is() { return 'tree-view'; }
+    static get properties() {
+        return {
+            path: {
+                type: String,
+                value: "",
+                notify: true
+            },
+            value: {
+                type: Object,
+                notify: true
+            },
+            data: {
+                type: Object,
+                observer: '_dataChanged'
+            },
+            pathArray: {
+                type: Array,
+                value: ['results']
+            }
+        };
+    }
+
+    /**
+     * When data changes, reset path and value
+     */
+    _dataChanged() {
+        this.path = "";
+        this.value = JSON.stringify(this.data);
+        this.pathArray = ['info', 'seed']; // debug
+
+        this.render();
+    }
+
+    /**
+     * Renders the json object passed in data. Follows path given by this.path
+     * 
+     * Inspired by: https://stackoverflow.com/questions/8312459/iterate-through-object-properties
+     */
+    render() {
+
+        // start recursive rendering function
+        this.renderPropertiesOf(this.data, 0, "this.data");
+    }
+
+    /**
+     * Displays all children properties (only objects) of object at tabspace 
+       depth, and recurses down following pathArray
+     * NOTE: only renders objects.....
+     * 
+     * @param object <- object to be rendered and inspected for children
+     * @param depth <- current depth of dive into object. 
+     * @param pathSoFar <- path into this.data so far. Used for recursively digging down
+     */
+    renderPropertiesOf(object, depth, pathSoFar) {
+
+        // update this.value and this.path
+        this.path = pathSoFar;
+        this.value = JSON.stringify(object);
+
+        console.log(object);
+
+        // loop over single level of object
+        for (var property in object) {
+            if (object.hasOwnProperty(property)) {
+
+                // first add tabs as per depth
+                for (let i = 0; i < depth; ++i) {
+                    this.$.renderWindow.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                }
+
+                // now render property
+                this.$.renderWindow.innerHTML += "" + property + ": <br>";
+
+                // if not reached end of path, and this property is next step in path, follow it
+                if (depth < this.pathArray.length && property == this.pathArray[depth]) {
+                    let newPathSoFar = pathSoFar + "." + property;
+                    let newObject = eval(newPathSoFar);
+
+                    // only recurse if encountered an object
+                    if (typeof(newObject) == 'object') {
+                        this.renderPropertiesOf(newObject, depth + 1, newPathSoFar);
+                    }
+                }
+            }
+        }
+    }
+}
+
+window.customElements.define(TreeView.is, TreeView);
+    </script>
+</dom-module>
