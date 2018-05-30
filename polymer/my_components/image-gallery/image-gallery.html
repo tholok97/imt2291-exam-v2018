@@ -1,36 +1,45 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <dom-module id="image-gallery">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h2>Hello [[prop1]]!</h2>
-  </template>
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <h2>Hello</h2>
 
-  <script>
-    /**
-     * `image-gallery`
-     * 
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
-    class ImageGallery extends Polymer.Element {
-      static get is() { return 'image-gallery'; }
-      static get properties() {
+        <!-- show all the images -->
+        <template is="dom-repeat" items="[[urls]]" as="url">
+
+            <!-- using paper-card for tiling only -->
+            <paper-card image="[[url]]"></paper-card>
+        </template>
+
+
+    </template>
+
+        <script>
+            /**
+             * `image-gallery`
+             * 
+             *
+             * @customElement
+             * @polymer
+             * @demo demo/index.html
+             */
+class ImageGallery extends Polymer.Element {
+    static get is() { return 'image-gallery'; }
+    static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'image-gallery'
-          }
+            urls: {
+                type: Array
+            }
         };
-      }
     }
+}
 
-    window.customElements.define(ImageGallery.is, ImageGallery);
-  </script>
-</dom-module>
+window.customElements.define(ImageGallery.is, ImageGallery);
+        </script>
+    </dom-module>
