@@ -8,7 +8,7 @@
 
 * Task 1 through 10 I would consider finished.
 * Task 4 has an error. See TODO below.
-* Task 11 I only got about half-way through. See note in `tree-viewer.html`.
+* Task 11 I only got about half-way through. See note in `tree-view.html`.
 
 
 ## TODO
