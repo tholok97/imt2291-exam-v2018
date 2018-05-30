@@ -49,9 +49,11 @@ Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import
                     slot="dropdown-content" 
                     selected="{{chosenAircraftID}}">
 
+                <!-- populate with paper-items based on aircraft property -->
                 <template is="dom-repeat" items="[[aircraft]]" as="craft">
                     <paper-item value="[[craft.id]]">[[craft.name]]</paper-item>
                 </template>
+
             </paper-listbox>
         </paper-dropdown-menu>
 
