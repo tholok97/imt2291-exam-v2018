@@ -21,7 +21,6 @@ Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import
 
         <iron-ajax
             auto
-            id="getAllPlaylistsAjax"
             url="[[getThumbnailsOfAircraft]]?craftid=[[chosenAircraftID]]"
             method="get"
             handle-as="json"
@@ -29,15 +28,30 @@ Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import
             last-response="{{response}}"
             debounce-duration="300"></iron-ajax>
 
+        <iron-ajax
+            id="getAllAircraftAjax"
+            url="[[getAllAircraftAPI]]";
+            method="get"
+            handle-as="json"
+            on-response="handleGetAllAircraftAPIResponse"
+            last-response="{{response}}"
+            debounce-duration="300"></iron-ajax>
+
         <h1>Fartøy thumbnails:</h1>
 
         <!-- aircraft picker -->
+        <!-- Inspired by https://stackoverflow.com/questions/46516755/paper-item-way-to-place-value-for-paper-dropdown -->
         <paper-dropdown-menu label="Velg fartøy:">
-            <paper-listbox slot="dropdown-content" selected="1">
-                <paper-item>allosaurus</paper-item>
-                <paper-item>brontosaurus</paper-item>
-                <paper-item>carcharodontosaurus</paper-item>
-                <paper-item>diplodocus</paper-item>
+
+            <!-- listbox that uses value field of paper-items to determine selected value -->
+            <paper-listbox 
+                    attr-for-selected="value" 
+                    slot="dropdown-content" 
+                    selected="{{chosenAircraftID}}">
+
+                <template is="dom-repeat" items="[[aircraft]]" as="craft">
+                    <paper-item value="[[craft.id]]">[[craft.name]]</paper-item>
+                </template>
             </paper-listbox>
         </paper-dropdown-menu>
 
@@ -69,6 +83,13 @@ class PolymerApp extends Polymer.Element {
                 // 
                 // value: window.Polymer.apiBaseURL+'task10_get_thumbnail_ids_of_craft.php'
             },
+            getAllAircraftAPI: {
+
+                type: String,
+                value: 'http://localhost/imt2291-eksamen-v2018/RC/api/task10_get_aircraft.php'
+
+                // see above comment...
+            },
             chosenAircraftID: {
                 type: Number,
                 value: 1
@@ -77,11 +98,18 @@ class PolymerApp extends Polymer.Element {
     }
 
     /**
+     * When ready, initiate call to fill dropdown
+     */
+    ready() {
+        super.ready();
+
+        this.$.getAllAircraftAjax.generateRequest();
+    }
+
+    /**
      * Handle response from thumbnails API
      */
     handleGetThumbnailsOfAircraftResponse(res) {
-
-        console.log(res.detail.response);
 
         // if request went through fine -> populate thumbnails
         if (res.detail.response.status == 'ok') {
@@ -93,11 +121,30 @@ class PolymerApp extends Polymer.Element {
             for (let thumbnailID of res.detail.response.thumbnails) {
                 // add thumbnails based on id from request
                 // The URL should be abstracted out int const, but left as is for this exam
+                //
+                // Reusing functionality from task4
                 this.push(
                     'thumbnails', 
                     'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=' + thumbnailID
                 );
             }
+        } else {
+            // error handling.. left out to save time
+        }
+    }
+
+    /**
+     * Handle response from get aircraft API. Populate dropdown
+     */
+    handleGetAllAircraftAPIResponse(res) {
+        console.log(res.detail.response);
+
+        if (res.detail.response.status == 'ok') {
+
+            this.aircraft = res.detail.response.aircraft;
+
+        } else {
+            // error handling.. left out to save time
         }
     }
 }

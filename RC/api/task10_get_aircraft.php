@@ -2,9 +2,12 @@
 
 /**
  * Returns result of "$db->getAircraft" as json
+ * TAKEN FROM TASK 4
  */
 
-require_once dirname(__FILE__) . '/DB.php';
+require_once dirname(__FILE__) . '/../DB.php';
+
+header("Access-Control-Allow-Origin: http://localhost:8081");
 
 // prepare database
 $db = new DB();
