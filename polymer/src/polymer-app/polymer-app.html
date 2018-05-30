@@ -1,4 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../my_components/image-gallery/image-gallery.html">
+
+<!-- 
+NOTE taken from paper-dropdown-menu component's documentation:
+Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it 
+-->
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 
 <dom-module id="polymer-app">
   <template>
@@ -7,26 +17,45 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
-  </template>
 
-  <script>
+    <h1>Fartøy thumbnails:</h1>
+
+    <!-- aircraft picker -->
+    <paper-dropdown-menu label="Velg fartøy:">
+        <paper-listbox slot="dropdown-content" selected="1">
+            <paper-item>allosaurus</paper-item>
+            <paper-item>brontosaurus</paper-item>
+            <paper-item>carcharodontosaurus</paper-item>
+            <paper-item>diplodocus</paper-item>
+        </paper-listbox>
+    </paper-dropdown-menu>
+
+    <!-- show thumbnails of aircraft of given type --> 
+    <image-gallery></image-gallery>
+
+
+</template>
+
+<script>
     /**
      * @customElement
      * @polymer
      */
-    class PolymerApp extends Polymer.Element {
-      static get is() { return 'polymer-app'; }
-      static get properties() {
+class PolymerApp extends Polymer.Element {
+    static get is() { return 'polymer-app'; }
+    static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'polymer-app'
-          }
+            thumbnails: {
+                type: Array,
+                value: [
+                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=12',
+                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=13'
+                ]
+            }
         };
-      }
     }
+}
 
-    window.customElements.define(PolymerApp.is, PolymerApp);
-  </script>
+window.customElements.define(PolymerApp.is, PolymerApp);
+</script>
 </dom-module>

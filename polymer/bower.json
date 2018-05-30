@@ -2,7 +2,11 @@
   "name": "polymer",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.1.0",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.1.1",
+    "paper-item": "PolymerElements/paper-item#^2.1.1",
+    "paper-card": "PolymerElements/paper-card#^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
