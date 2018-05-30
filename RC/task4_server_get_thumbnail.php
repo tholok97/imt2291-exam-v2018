@@ -11,6 +11,9 @@ require_once dirname(__FILE__) . '/DB.php';
 $db = new DB();
 
 // fetch thumbnail
+//
+// THIS FUNCTIONCALL RETURNS _THUMBNAIL_ WITH ID EQUAL TO CRAFTID. Read the task 
+// description wrong. Though thumbnails were indexed on crafid... See TODO in README
 $ret = $db->getAircraftThumbnail($_GET['craftid']);
 
 // if everything went right -> echo image

@@ -395,9 +395,16 @@ FROM aircraftImages
     }
 
     /**
-     * Get thumbnail of aircraft with given id
+     * Get thumbnail with given id
      *
-     * @param $id
+     * WARNING: The naming of this function is wrong. See note below
+     *
+     * NOTE: I initially though aircraftImages was indexed on craftid, but found 
+     *  out later that it isn't. There might be issues related to this in my code, 
+     *  but I've tried to fix them using the function below this one, which find 
+     *  ids of aircraft thumbnails given craftid
+     *
+     * @param $craftid (THIS SHOULD BE NAMED id, BUT DON'T HAVE TIME TO REFACTOR)
      *
      * @return assoc array with fields status, thumbnail, mimeType, message
      */
