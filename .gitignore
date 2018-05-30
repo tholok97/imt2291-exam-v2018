@@ -6,6 +6,8 @@ vendor/
 # ignore images
 images/
 
+# ignoree bower_components for Polymer project
+
 # Ignore any build-files still roaming around
 *.exe
 *.out
