@@ -443,4 +443,57 @@ WHERE id=:id
         return $ret;
     }
 
+    /**
+     * Get thumbnail of aircraft with given id
+     *
+     * @param $id
+     *
+     * @return assoc array with fields status, thumbnails, mimeType, message
+     */
+    function getAircraftThumbnails($craftID) {
+
+        // prepare ret
+        $ret['status'] = 'fail';
+        $ret['thumbnails'] = array();
+        $ret['message'] = null;
+
+        // try and get thumbnail
+        try {
+
+            // prepare statement
+            $stmt = $this->dbh->prepare('
+SELECT id
+FROM aircraftImages
+WHERE craftid=:craftid
+            ');
+
+            // bind param
+            $stmt->bindParam(':craftid', $craftID);
+
+            // execute the statement and handle errors
+            if ($stmt->execute()) {
+
+                // success!
+                $ret['status'] = 'ok';
+
+                foreach ($stmt->fetchAll() as $row) {
+                    array_push(
+                        $ret['thumbnails'],
+                        $row['id']
+                    );
+                }
+
+            } else {
+                $ret['message'] = "Statement didn't exeute right : " . $stmt->errorInfo()[2];
+            }
+
+
+        } catch (PDOException $ex) {
+            $ret['status'] = 'fail';
+            $ret['message'] = "Something went wrong when fetching: " . $ex->getMessage();
+        }
+
+        return $ret;
+    }
+
 }

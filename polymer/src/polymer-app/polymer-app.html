@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../my_components/image-gallery/image-gallery.html">
 
 <!-- 
@@ -11,27 +12,37 @@ Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 
 <dom-module id="polymer-app">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
 
-    <h1>Fartøy thumbnails:</h1>
+        <iron-ajax
+            auto
+            id="getAllPlaylistsAjax"
+            url="[[getThumbnailsOfAircraft]]?craftid=[[chosenAircraftID]]"
+            method="get"
+            handle-as="json"
+            on-response="handleGetThumbnailsOfAircraftResponse"
+            last-response="{{response}}"
+            debounce-duration="300"></iron-ajax>
 
-    <!-- aircraft picker -->
-    <paper-dropdown-menu label="Velg fartøy:">
-        <paper-listbox slot="dropdown-content" selected="1">
-            <paper-item>allosaurus</paper-item>
-            <paper-item>brontosaurus</paper-item>
-            <paper-item>carcharodontosaurus</paper-item>
-            <paper-item>diplodocus</paper-item>
-        </paper-listbox>
-    </paper-dropdown-menu>
+        <h1>Fartøy thumbnails:</h1>
 
-    <!-- show thumbnails of aircraft of given type --> 
-    <image-gallery urls="[[thumbnails]]"></image-gallery>
+        <!-- aircraft picker -->
+        <paper-dropdown-menu label="Velg fartøy:">
+            <paper-listbox slot="dropdown-content" selected="1">
+                <paper-item>allosaurus</paper-item>
+                <paper-item>brontosaurus</paper-item>
+                <paper-item>carcharodontosaurus</paper-item>
+                <paper-item>diplodocus</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>
+
+        <!-- show thumbnails of aircraft of given type --> 
+        <image-gallery urls="[[thumbnails]]"></image-gallery>
 
 
 </template>
@@ -46,13 +57,48 @@ class PolymerApp extends Polymer.Element {
     static get properties() {
         return {
             thumbnails: {
-                type: Array,
-                value: [
-                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=12',
-                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=13'
-                ]
+                type: Array
+            },
+            // URL to API for getting aircraft thumbnails
+            getThumbnailsOfAircraft: {
+                type: String,
+                value: 'http://localhost/imt2291-eksamen-v2018/RC/api/task10_get_thumbnails_of_craft_as_ids.php'
+
+                // The above should be the following, but didn't impelement 
+                // window.Polymer.apiBaseURL for this exam (to save time):
+                // 
+                // value: window.Polymer.apiBaseURL+'task10_get_thumbnail_ids_of_craft.php'
+            },
+            chosenAircraftID: {
+                type: Number,
+                value: 1
             }
         };
+    }
+
+    /**
+     * Handle response from thumbnails API
+     */
+    handleGetThumbnailsOfAircraftResponse(res) {
+
+        console.log(res.detail.response);
+
+        // if request went through fine -> populate thumbnails
+        if (res.detail.response.status == 'ok') {
+
+            // empty thumbnails
+            this.thumbnails = []
+
+
+            for (let thumbnailID of res.detail.response.thumbnails) {
+                // add thumbnails based on id from request
+                // The URL should be abstracted out int const, but left as is for this exam
+                this.push(
+                    'thumbnails', 
+                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=' + thumbnailID
+                );
+            }
+        }
     }
 }
 
