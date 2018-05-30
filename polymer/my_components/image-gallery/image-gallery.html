@@ -1,46 +1,36 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <dom-module id="image-gallery">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
-        </style>
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
 
-        THIS MESSAGE SHOULD BE SHOWING...
-
-        <!--
-        <template is="dom-repeat" items="[[images]]" as="image">
-            [[image]]
-        </template>
-        -->
-
-        <script>
-            /**
-             * `image-gallery`
-             * 
-             *
-             * @customElement
-             * @polymer
-             * @demo demo/index.html
-             */
-class ImageGallery extends Polymer.Element {
-    static get is() { return 'image-gallery'; }
-    static get properties() {
+  <script>
+    /**
+     * `image-gallery`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ImageGallery extends Polymer.Element {
+      static get is() { return 'image-gallery'; }
+      static get properties() {
         return {
-            images: {
-                type: Array,
-                value: [
-                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=12',
-                    'http://localhost/imt2291-eksamen-v2018/RC/task4_server_get_thumbnail.php?craftid=13'
-                ]
-            }
+          prop1: {
+            type: String,
+            value: 'image-gallery'
+          }
         };
+      }
     }
-}
 
-window.customElements.define(ImageGallery.is, ImageGallery);
-        </script>
-    </dom-module>
+    window.customElements.define(ImageGallery.is, ImageGallery);
+  </script>
+</dom-module>
